@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
-from typing import Literal, Optional, Union, Any
+from typing import Literal, Optional, Union, Any, TYPE_CHECKING
 from google import genai
 from google.genai import types
 import termcolor
@@ -28,7 +28,8 @@ import time
 from rich.console import Console
 from rich.table import Table
 
-from computers import EnvState, Computer
+if TYPE_CHECKING:
+    from computers import EnvState, Computer
 
 MAX_RECENT_TURN_WITH_SCREENSHOTS = 3
 PREDEFINED_COMPUTER_USE_FUNCTIONS = [
@@ -52,7 +53,7 @@ console = Console()
 
 # Built-in Computer Use tools will return "EnvState".
 # Custom provided functions will return "dict".
-FunctionResponseT = Union[EnvState, dict]
+FunctionResponseT = Union["EnvState", dict]
 
 
 def multiply_numbers(x: float, y: float) -> dict:
@@ -63,7 +64,7 @@ def multiply_numbers(x: float, y: float) -> dict:
 class BrowserAgent:
     def __init__(
         self,
-        browser_computer: Computer,
+        browser_computer: "Computer",
         query: str,
         model_name: str,
         verbose: bool = True,
@@ -355,6 +356,7 @@ class BrowserAgent:
                     fc_result = self.handle_action(function_call)
             else:
                 fc_result = self.handle_action(function_call)
+            from computers import EnvState
             if isinstance(fc_result, EnvState):
                 function_responses.append(
                     FunctionResponse(

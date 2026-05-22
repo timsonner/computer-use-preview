@@ -84,9 +84,17 @@ class DesktopComputer(Computer):
         if clear_before_typing:
             if sys.platform == "darwin":
                 pyautogui.hotkey("command", "a")
+                pyautogui.press("delete")
             else:
+                # In Windows/Linux terminals, pressing escape clears the command line.
+                # In browser inputs, escape is a safe no-op.
+                pyautogui.press("escape")
+                time.sleep(0.05)
+                # Select all and delete. Using backspace instead of delete is crucial:
+                # if ctrl+a types a literal '^A' in legacy CMD, backspace will delete the '^A',
+                # whereas delete would do nothing (leaving the '^A' prepended to the typed text).
                 pyautogui.hotkey("ctrl", "a")
-            pyautogui.press("delete")
+                pyautogui.press("backspace")
             time.sleep(0.1)
 
         pyautogui.write(text, interval=0.01)

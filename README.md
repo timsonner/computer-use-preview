@@ -134,15 +134,7 @@ When instructing the agent to run commands containing specific local IP addresse
 
 To bypass this filter, you can mask the sensitive IP addresses or executables in shell environment variables before executing the script, and wrap your `--query` in **single quotes (`'...'`)** to prevent your parent terminal from interpolating them beforehand. The agent will then write the literal variable references directly into the target terminal, where they are resolved natively.
 
-#### 1. Temporary Session-Level Variables (Single-Line Command Prefix)
-
-If you only want to define these environment variables temporarily for the current terminal session without making them persistent globally, you can set them in a single-line command prefix when executing `main.py`:
-
-```powershell
-$env:karl="curl.exe"; $env:pajaro="10.10.0.1"; $env:GEMINI_API_KEY="YOUR_GEMINI_API_KEY"; python main.py --env="desktop" --query='Use windows-r to open powershell.exe. Once open, type & $env:karl followed by space and $env:pajaro and press enter.'
-```
-
-#### 2. Setting Up Global Persistent Environment Variables (Recommended)
+#### 1. Setting Up Global Persistent Environment Variables (Recommended)
 
 To make your testing aliases and variables persistent and automatically inherited by **any** new terminal session (including those spawned via the Windows Run dialog), run the following commands in your PowerShell:
 
@@ -166,6 +158,14 @@ Once set, these variables persist across restarts. You can then run your desktop
     ```powershell
     python main.py --env="desktop" --query='Use windows-r to open cmd.exe. Once open, type %karl% followed by space and %pajaro% and press enter.'
     ```
+
+#### 2. Temporary Session-Level Variables (Single-Line Command Prefix)
+
+If you only want to define these environment variables temporarily for the current terminal session without making them persistent globally, you can set them in a single-line command prefix when executing `main.py`:
+
+```powershell
+$env:karl="curl.exe"; $env:pajaro="10.10.0.1"; $env:GEMINI_API_KEY="YOUR_GEMINI_API_KEY"; python main.py --env="desktop" --query='Use windows-r to open powershell.exe. Once open, type & $env:karl followed by space and $env:pajaro and press enter.'
+```
 
 #### 3. Persistent PowerShell Profile (For Direct Alias Syntax)
 

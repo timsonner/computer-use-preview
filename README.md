@@ -159,15 +159,7 @@ Once set, these variables persist across restarts. You can then run your desktop
     python main.py --env="desktop" --query='Use windows-r to open cmd.exe. Once open, type %karl% followed by space and %pajaro% and press enter.'
     ```
 
-#### 2. Temporary Session-Level Variables (Single-Line Command Prefix)
-
-If you only want to define these environment variables temporarily for the current terminal session without making them persistent globally, you can set them in a single-line command prefix when executing `main.py`:
-
-```powershell
-$env:karl="curl.exe"; $env:pajaro="10.10.0.1"; $env:GEMINI_API_KEY="YOUR_GEMINI_API_KEY"; python main.py --env="desktop" --query='Use windows-r to open powershell.exe. Once open, type & $env:karl followed by space and $env:pajaro and press enter.'
-```
-
-#### 3. Persistent PowerShell Profile (For Direct Alias Syntax)
+#### 2. Persistent PowerShell Profile (For Direct Alias Syntax)
 
 If you prefer to define first-class commands (aliases) so the agent can type `karl $pajaro` naturally without the `&` call operator, you can append them to your PowerShell `$PROFILE`:
 

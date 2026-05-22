@@ -175,3 +175,10 @@ cython_debug/
 
 # Node stuff
 node_modules/
+
+# Antigravity CLI
+.antigravitycli/
+
+# Workstation agent screenshots
+screen.png
+

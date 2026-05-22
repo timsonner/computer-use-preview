@@ -81,11 +81,13 @@ class PlaywrightComputer(Computer):
         initial_url: str = "https://www.google.com",
         search_engine_url: str = "https://www.google.com",
         highlight_mouse: bool = False,
+        channel: str | None = None,
     ):
         self._initial_url = initial_url
         self._screen_size = screen_size
         self._search_engine_url = search_engine_url
         self._highlight_mouse = highlight_mouse
+        self._channel = channel
 
     def _handle_new_page(self, new_page: playwright.sync_api.Page):
         """The Computer Use model only supports a single tab at the moment.
@@ -100,8 +102,8 @@ class PlaywrightComputer(Computer):
     def __enter__(self):
         print("Creating session...")
         self._playwright = sync_playwright().start()
-        self._browser = self._playwright.chromium.launch(
-            args=[
+        launch_kwargs = {
+            "args": [
                 "--disable-extensions",
                 "--disable-file-system",
                 "--disable-plugins",
@@ -111,13 +113,17 @@ class PlaywrightComputer(Computer):
                 "--disable-sync",
                 # No '--no-sandbox' arg means the sandbox is on.
             ],
-            headless=bool(os.environ.get("PLAYWRIGHT_HEADLESS", False)),
-        )
+            "headless": bool(os.environ.get("PLAYWRIGHT_HEADLESS", False)),
+        }
+        if self._channel:
+            launch_kwargs["channel"] = self._channel
+        self._browser = self._playwright.chromium.launch(**launch_kwargs)
         self._context = self._browser.new_context(
             viewport={
                 "width": self._screen_size[0],
                 "height": self._screen_size[1],
-            }
+            },
+            ignore_https_errors=True,
         )
         self._page = self._context.new_page()
         self._page.goto(self._initial_url)

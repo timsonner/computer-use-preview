@@ -15,7 +15,7 @@ import argparse
 import os
 
 from agent import BrowserAgent
-from computers import BrowserbaseComputer, PlaywrightComputer
+from computers import BrowserbaseComputer, PlaywrightComputer, DesktopComputer
 
 
 PLAYWRIGHT_SCREEN_SIZE = (1440, 900)
@@ -33,7 +33,7 @@ def main() -> int:
     parser.add_argument(
         "--env",
         type=str,
-        choices=("playwright", "browserbase"),
+        choices=("playwright", "browserbase", "desktop"),
         default="playwright",
         help="The computer use environment to use.",
     )
@@ -54,17 +54,31 @@ def main() -> int:
         default='gemini-2.5-computer-use-preview-10-2025',
         help="Set which main model to use.",
     )
+    parser.add_argument(
+        "--channel",
+        type=str,
+        default="chrome",
+        help="The browser channel to use for Playwright (e.g. chrome, chrome-beta, msedge). Use 'chromium' or empty string for default Chromium.",
+    )
     args = parser.parse_args()
 
     if args.env == "playwright":
+        channel = args.channel
+        if channel and channel.lower() in ("none", "chromium", ""):
+            channel = None
         env = PlaywrightComputer(
             screen_size=PLAYWRIGHT_SCREEN_SIZE,
             initial_url=args.initial_url,
             highlight_mouse=args.highlight_mouse,
+            channel=channel,
         )
     elif args.env == "browserbase":
         env = BrowserbaseComputer(
             screen_size=PLAYWRIGHT_SCREEN_SIZE,
+            initial_url=args.initial_url
+        )
+    elif args.env == "desktop":
+        env = DesktopComputer(
             initial_url=args.initial_url
         )
     else:

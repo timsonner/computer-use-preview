@@ -79,11 +79,26 @@ class BrowserAgent:
             project=os.environ.get("VERTEXAI_PROJECT"),
             location=os.environ.get("VERTEXAI_LOCATION"),
         )
+
+        from computers.desktop.desktop import DesktopComputer
+        if isinstance(self._browser_computer, DesktopComputer):
+            desktop_instruction = (
+                "[SYSTEM INSTRUCTION: You are running on a full physical desktop OS environment, not a sandboxed browser! "
+                "You have complete and direct control over the entire operating system, window manager, and all applications. "
+                "The `key_combination` and text typing actions are sent directly to the host OS, not just a browser window. "
+                "For example, you can use `command+r` (which translates to Win+R on Windows) to open the Run dialog, or `command` "
+                "by itself to open the Start menu. You can open any terminal (like cmd.exe), run administrative commands, launch apps, "
+                "and click anywhere on the screen. Do not limit yourself to the browser context.]\n\n"
+            )
+            query_text = desktop_instruction + self._query
+        else:
+            query_text = self._query
+
         self._contents: list[Content] = [
             Content(
                 role="user",
                 parts=[
-                    Part(text=self._query),
+                    Part(text=query_text),
                 ],
             )
         ]
@@ -115,6 +130,9 @@ class BrowserAgent:
             ],
             thinking_config=types.ThinkingConfig(
                 include_thoughts=True
+            ),
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(
+                disable=True
             ),
         )
 

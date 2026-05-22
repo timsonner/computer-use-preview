@@ -1,4 +1,28 @@
-# Computer Use Preview
+# Computer Use Preview (Workstation & Local Devices Fork)
+
+This repository is a customized fork of the original Google Upstream repository: [google-gemini/computer-use-preview](https://github.com/google-gemini/computer-use-preview).
+
+In addition to the original web-browser-only computer use capabilities, this fork introduces support for **full local workstation control** and enhances testing with **local physical devices**.
+
+---
+
+## 🚀 Key Fork Enhancements
+
+### 1. 🖥️ Full Workstation/Desktop Environment Support (`--env="desktop"`)
+You can now let Gemini control your actual local workstation (OS) rather than being restricted to a sandboxed browser window! 
+* Uses `PyAutoGUI` for mouse/keyboard inputs and `Pillow` for real-time high-performance memory screenshots.
+* **OS Shortcut & Key Support**: Includes mapping for `command+r` to open the Windows Run dialog, pressing `command` to open the Windows Start Menu, typing commands into `cmd.exe`/terminal sessions, and clicking outside browser windows.
+* **DPI-Aware Coordinate Scaling**: Safely translates Gemini's normalized `0-1000` coordinate output to your monitor's exact pixel dimensions dynamically.
+* **Fail-Safe Built-in**: `pyautogui.FAILSAFE = True` is enabled. You can abort the agent's run at any second simply by moving your physical mouse cursor to any corner of your screen.
+
+### 2. 🔒 Local Device Testing (Self-Signed SSL/TLS Bypass)
+When testing on local networks or developer servers (such as firewalls, routers, or self-signed API targets), Playwright would previously fail with `net::ERR_CERT_AUTHORITY_INVALID`.
+* We configured browser contexts with `ignore_https_errors=True` by default so the agent can safely interact with local/internal devices during testing.
+
+### 3. 🧹 Clean Logs (Suppressed SDK Warnings)
+* Configured `GenerateContentConfig` with `automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)`. This suppresses redundant warning logs printed by the `google-genai` SDK regarding AFC being disabled, ensuring clean console outputs.
+
+---
 
 ## Quick Start
 
@@ -94,6 +118,15 @@ You can specify a particular environment with the ```--env <environment>``` flag
 
 - `playwright`: Runs the browser locally using Playwright.
 - `browserbase`: Connects to a Browserbase instance.
+- `desktop`: Controls the actual local physical workstation using PyAutoGUI and Pillow.
+
+**Local Workstation (Desktop)**
+
+Runs the agent on your host operating system. Perfect for opening system applications, running shell terminals, or controlling multiple OS windows:
+
+```bash
+python main.py --query="Open cmd.exe using windows-r and run ipconfig" --env="desktop"
+```
 
 **Local Playwright**
 
@@ -133,8 +166,8 @@ The `main.py` script is the command-line interface (CLI) for running the browser
 | Argument | Description | Required | Default | Supported Environment(s) |
 |-|-|-|-|-|
 | `--query` | The natural language query for the browser agent to execute. | Yes | N/A | All |
-| `--env` | The computer use environment to use. Must be one of the following: `playwright`, or `browserbase` | No | N/A | All |
-| `--initial_url` | The initial URL to load when the browser starts. | No | https://www.google.com | All |
+| `--env` | The computer use environment to use. Must be one of the following: `playwright`, `browserbase`, or `desktop` | No | `playwright` | All |
+| `--initial_url` | The initial URL to load when the browser starts. | No | https://www.google.com | `playwright`, `browserbase` |
 | `--highlight_mouse` | If specified, the agent will attempt to highlight the mouse cursor's position in the screenshots. This is useful for visual debugging. | No | False (not highlighted) | `playwright` |
 | `--model` | The model to use. See the "Available Models" section for more information. | No | `gemini-2.5-computer-use-preview-10-2025` | All |
 

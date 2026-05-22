@@ -22,6 +22,11 @@ When testing on local networks or developer servers (such as firewalls, routers,
 ### 3. Clean Logs (Suppressed SDK Warnings)
 * Configured `GenerateContentConfig` with `automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)`. This suppresses redundant warning logs printed by the `google-genai` SDK regarding AFC being disabled, ensuring clean console outputs.
 
+### 4. Robust Safety & Error Handling Improvements
+* **Gemini SDK Block Reason Handling**: Resolved a compatibility issue with the Google GenAI SDK by updating SDK calls to target `types.BlockedReason` instead of `types.BlockReason`.
+* **Informative Safety Feedback**: Upgraded safety block reporting to robustly handle and report all API block reasons (including `SAFETY`, `OTHER`, `JAILBREAK`, etc.) descriptively to the user rather than throwing a generic/empty response error.
+* **Dismissal-Resistant Text Input**: Fixed a focus-loss bug where clear-before-typing sequences triggered a native OS dismissal (due to an unnecessary `escape` keypress), dramatically improving the stability of the agent when interacting with Windows native dialogs (such as the Run command prompt or Start Menu).
+
 ---
 
 ## Quick Start

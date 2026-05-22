@@ -15,7 +15,7 @@ import argparse
 import os
 
 from agent import BrowserAgent
-from computers import BrowserbaseComputer, PlaywrightComputer, DesktopComputer
+from computers import BrowserbaseComputer, PlaywrightComputer
 
 
 PLAYWRIGHT_SCREEN_SIZE = (1440, 900)
@@ -85,6 +85,7 @@ def main() -> int:
             initial_url=args.initial_url
         )
     elif args.env == "desktop":
+        from computers import DesktopComputer
         env = DesktopComputer(
             initial_url=args.initial_url
         )

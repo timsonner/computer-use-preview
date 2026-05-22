@@ -14,7 +14,12 @@
 from .computer import Computer, EnvState
 from .browserbase.browserbase import BrowserbaseComputer
 from .playwright.playwright import PlaywrightComputer
-from .desktop.desktop import DesktopComputer
+
+def __getattr__(name: str):
+    if name == "DesktopComputer":
+        from .desktop.desktop import DesktopComputer
+        return DesktopComputer
+    raise AttributeError(f"module {__name__} has no attribute {name}")
 
 __all__ = [
     "Computer",

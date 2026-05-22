@@ -80,8 +80,14 @@ class BrowserAgent:
             location=os.environ.get("VERTEXAI_LOCATION"),
         )
 
-        from computers.desktop.desktop import DesktopComputer
-        if isinstance(self._browser_computer, DesktopComputer):
+        is_desktop = False
+        try:
+            from computers.desktop.desktop import DesktopComputer
+            is_desktop = isinstance(self._browser_computer, DesktopComputer)
+        except BaseException:
+            pass
+
+        if is_desktop:
             desktop_instruction = (
                 "[SYSTEM INSTRUCTION: You are running on a full physical desktop OS environment, not a sandboxed browser! "
                 "You have complete and direct control over the entire operating system, window manager, and all applications. "

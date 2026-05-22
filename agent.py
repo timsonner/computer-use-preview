@@ -81,14 +81,7 @@ class BrowserAgent:
             location=os.environ.get("VERTEXAI_LOCATION"),
         )
 
-        is_desktop = False
-        try:
-            from computers.desktop.desktop import DesktopComputer
-            is_desktop = isinstance(self._browser_computer, DesktopComputer)
-        except BaseException:
-            pass
-
-        if is_desktop:
+        if self._browser_computer.__class__.__name__ == "DesktopComputer":
             desktop_instruction = (
                 "[SYSTEM INSTRUCTION: You are running on a full physical desktop OS environment, not a sandboxed browser! "
                 "You have complete and direct control over the entire operating system, window manager, and all applications. "
@@ -356,8 +349,7 @@ class BrowserAgent:
                     fc_result = self.handle_action(function_call)
             else:
                 fc_result = self.handle_action(function_call)
-            from computers import EnvState
-            if isinstance(fc_result, EnvState):
+            if hasattr(fc_result, "url") and hasattr(fc_result, "screenshot"):
                 function_responses.append(
                     FunctionResponse(
                         name=function_call.name,

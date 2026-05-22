@@ -5,3 +5,5 @@ playwright==1.55.0
 browserbase==1.4.0
 rich
 pytest
+pyautogui>=0.9.54
+Pillow>=10.0.0

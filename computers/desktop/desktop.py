@@ -18,8 +18,15 @@ import termcolor
 import webbrowser
 from typing import Literal
 
-import pyautogui
-from PIL import ImageGrab
+try:
+    import pyautogui
+except ImportError:
+    pyautogui = None
+
+try:
+    from PIL import ImageGrab
+except ImportError:
+    ImageGrab = None
 
 from ..computer import (
     Computer,
@@ -27,7 +34,9 @@ from ..computer import (
 )
 
 # Enable PyAutoGUI fail-safe to let users abort execution by moving the cursor to any corner.
-pyautogui.FAILSAFE = True
+if pyautogui is not None:
+    pyautogui.FAILSAFE = True
+
 
 
 class DesktopComputer(Computer):
@@ -37,6 +46,11 @@ class DesktopComputer(Computer):
         self,
         initial_url: str | None = None,
     ):
+        if pyautogui is None or ImageGrab is None:
+            raise ImportError(
+                "PyAutoGUI and Pillow (PIL) are required for DesktopComputer. "
+                "Please run `pip install pyautogui Pillow` to install them."
+            )
         self._initial_url = initial_url
 
     def __enter__(self):

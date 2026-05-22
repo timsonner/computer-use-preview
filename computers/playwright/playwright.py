@@ -82,12 +82,14 @@ class PlaywrightComputer(Computer):
         search_engine_url: str = "https://www.google.com",
         highlight_mouse: bool = False,
         channel: str | None = None,
+        ignore_https_errors: bool = False,
     ):
         self._initial_url = initial_url
         self._screen_size = screen_size
         self._search_engine_url = search_engine_url
         self._highlight_mouse = highlight_mouse
         self._channel = channel
+        self._ignore_https_errors = ignore_https_errors
 
     def _handle_new_page(self, new_page: playwright.sync_api.Page):
         """The Computer Use model only supports a single tab at the moment.
@@ -123,7 +125,7 @@ class PlaywrightComputer(Computer):
                 "width": self._screen_size[0],
                 "height": self._screen_size[1],
             },
-            ignore_https_errors=True,
+            ignore_https_errors=self._ignore_https_errors,
         )
         self._page = self._context.new_page()
         self._page.goto(self._initial_url)

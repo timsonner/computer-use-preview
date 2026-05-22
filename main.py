@@ -60,6 +60,12 @@ def main() -> int:
         default="chrome",
         help="The browser channel to use for Playwright (e.g. chrome, chrome-beta, msedge). Use 'chromium' or empty string for default Chromium.",
     )
+    parser.add_argument(
+        "--ignore_https_errors",
+        action="store_true",
+        default=False,
+        help="Ignore HTTPS/SSL certificate errors in Playwright (useful for local devices with self-signed certs).",
+    )
     args = parser.parse_args()
 
     if args.env == "playwright":
@@ -71,6 +77,7 @@ def main() -> int:
             initial_url=args.initial_url,
             highlight_mouse=args.highlight_mouse,
             channel=channel,
+            ignore_https_errors=args.ignore_https_errors,
         )
     elif args.env == "browserbase":
         env = BrowserbaseComputer(

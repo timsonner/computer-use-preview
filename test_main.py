@@ -38,7 +38,8 @@ class TestMain(unittest.TestCase):
             screen_size=main.PLAYWRIGHT_SCREEN_SIZE,
             initial_url='test_url',
             highlight_mouse=True,
-            channel='chrome'
+            channel='chrome',
+            ignore_https_errors=mock_args.ignore_https_errors
         )
         mock_browser_agent.assert_called_once()
         mock_browser_agent.return_value.agent_loop.assert_called_once()
@@ -86,7 +87,8 @@ class TestMain(unittest.TestCase):
             screen_size=main.PLAYWRIGHT_SCREEN_SIZE,
             initial_url='test_url',
             highlight_mouse=True,
-            channel=None
+            channel=None,
+            ignore_https_errors=mock_args.ignore_https_errors
         )
 
     @patch('main.argparse.ArgumentParser')
@@ -109,7 +111,8 @@ class TestMain(unittest.TestCase):
             screen_size=main.PLAYWRIGHT_SCREEN_SIZE,
             initial_url='test_url',
             highlight_mouse=True,
-            channel='chrome-beta'
+            channel='chrome-beta',
+            ignore_https_errors=mock_args.ignore_https_errors
         )
 
 if __name__ == '__main__':

@@ -20,12 +20,12 @@ from typing import Literal
 
 try:
     import pyautogui
-except Exception:
+except BaseException:
     pyautogui = None
 
 try:
     from PIL import ImageGrab
-except Exception:
+except BaseException:
     ImageGrab = None
 
 from ..computer import (

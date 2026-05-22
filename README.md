@@ -6,20 +6,20 @@ In addition to the original web-browser-only computer use capabilities, this for
 
 ---
 
-## 🚀 Key Fork Enhancements
+## Key Fork Enhancements
 
-### 1. 🖥️ Full Workstation/Desktop Environment Support (`--env="desktop"`)
+### 1. Full Workstation/Desktop Environment Support (`--env="desktop"`)
 You can now let Gemini control your actual local workstation (OS) rather than being restricted to a sandboxed browser window! 
 * Uses `PyAutoGUI` for mouse/keyboard inputs and `Pillow` for real-time high-performance memory screenshots.
 * **OS Shortcut & Key Support**: Includes mapping for `command+r` to open the Windows Run dialog, pressing `command` to open the Windows Start Menu, typing commands into `cmd.exe`/terminal sessions, and clicking outside browser windows.
 * **DPI-Aware Coordinate Scaling**: Safely translates Gemini's normalized `0-1000` coordinate output to your monitor's exact pixel dimensions dynamically.
 * **Fail-Safe Built-in**: `pyautogui.FAILSAFE = True` is enabled. You can abort the agent's run at any second simply by moving your physical mouse cursor to any corner of your screen.
 
-### 2. 🔒 Local Device Testing (Self-Signed SSL/TLS Bypass)
+### 2. Local Device Testing (Self-Signed SSL/TLS Bypass Option)
 When testing on local networks or developer servers (such as firewalls, routers, or self-signed API targets), Playwright would previously fail with `net::ERR_CERT_AUTHORITY_INVALID`.
-* We configured browser contexts with `ignore_https_errors=True` by default so the agent can safely interact with local/internal devices during testing.
+* Playwright is secure-by-default, but you can pass the `--ignore_https_errors` argument to ignore SSL certificate validation errors. This allows the agent to safely interact with local/internal devices during testing.
 
-### 3. 🧹 Clean Logs (Suppressed SDK Warnings)
+### 3. Clean Logs (Suppressed SDK Warnings)
 * Configured `GenerateContentConfig` with `automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)`. This suppresses redundant warning logs printed by the `google-genai` SDK regarding AFC being disabled, ensuring clean console outputs.
 
 ---
@@ -170,6 +170,8 @@ The `main.py` script is the command-line interface (CLI) for running the browser
 | `--initial_url` | The initial URL to load when the browser starts. | No | https://www.google.com | `playwright`, `browserbase` |
 | `--highlight_mouse` | If specified, the agent will attempt to highlight the mouse cursor's position in the screenshots. This is useful for visual debugging. | No | False (not highlighted) | `playwright` |
 | `--model` | The model to use. See the "Available Models" section for more information. | No | `gemini-2.5-computer-use-preview-10-2025` | All |
+| `--channel` | The browser channel to use for Playwright (e.g., `chrome`, `chrome-beta`, `msedge`). Use `chromium` or an empty string for default Chromium. | No | `chrome` | `playwright` |
+| `--ignore_https_errors` | If specified, Playwright will ignore HTTPS/SSL certificate errors (useful for local network devices/routers with self-signed certificates). | No | False | `playwright` |
 
 ### Environment Variables
 
